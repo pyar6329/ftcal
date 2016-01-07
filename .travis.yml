@@ -15,3 +15,6 @@ deploy:
   app: ftcal
   on:
     repo: pyar6329/ftcal
+    branch: master
+  run:
+  - rake db:migrate

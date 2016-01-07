@@ -33,6 +33,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# Use http Clients
+# gem 'httpclient'
+
 # login settings
 gem 'devise'
 gem 'omniauth'
@@ -50,9 +53,7 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem 'shoulda-matchers', require: false
   gem 'database_cleaner'
-  gem 'guard-rspec'
-  gem 'guard-livereload'
-  gem 'rb-fsevent'
+  gem 'factory_girl_rails'
 end
 
 group :development do
@@ -71,6 +72,11 @@ group :development do
   gem 'binding_of_caller'
   gem 'hirb'
   gem 'hirb-unicode'
+
+  # guard gems
+  gem 'guard-rspec'
+  gem 'guard-livereload'
+  gem 'rb-fsevent'
 end
 
 # heroku settings
