@@ -77,6 +77,9 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-livereload'
   gem 'rb-fsevent'
+
+  # secret keys
+  gem 'dotenv-rails'
 end
 
 # heroku settings
