@@ -37,6 +37,9 @@ bower.json
 # Ignore pow environment settings
 .powenv
 
+# dotenv files
+.env
+
 # intelliJ IDEA
 /*.iml
 /.idea/
