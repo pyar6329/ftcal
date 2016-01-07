@@ -9,3 +9,7 @@
   $ bundle install
   $ rails s
 ```
+
+##URL
+
+https://ftcal.herokuapp.com
