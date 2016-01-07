@@ -8,3 +8,10 @@ before_install:
 script:
 - bundle exec rake db:drop db:create db:migrate
 - bundle exec rspec spec
+deploy:
+  provider: heroku
+  api_key:
+    secure: Vtrox+c5/3OyZRRJHUWhjtHz4zXaGk6X78ONtaa9zA9Kr1tLvg8M5DIVuXyK2KlH969vL7IxSWj1/XtUd+rTOOZAoGqTN/DGo7G6MOjCcXQO5M4tnd5Xo8HsFDVuii81v8hg9X+vZRsAibrxhDMYcU2sHaqz5vxfJdZtB2IYxAIKaaNpXRUStz9rBwf0CbAzeJgGEQbZCbmFU2ZaX6KW5/Rtm/akp7Yk9NDC1RKh/Uf/PrnbnLI+HK/jNS9Fg+02CfvOySA/69dwr+C6KXk/cUHf8zZA1ae0iG+r2QhFwy0MoR+oHiwctfsvjzhttlNClkTjAA/ajybJ6nmw6p9D5QTnGTGAr8nrPLagFRXsXA+tB8MDkTH5ucTfSUR9LBrqNIKLd3b7The7OVYXitlK1jGWon7Hm1t33JO5c+QdD0DYjYoQxMk0yeUg78HYMStBTC29k8DndYd+Lq9cEOSJTlzlAUGnXAVkCY0/igRIwgSlpXGHFp71DskEvG/V6gFMke/w6c8eW5mFy2MzUum1MfXLNAJgNhpXUUCz6hFurNuboQ/z+TPkff7c2emw4RWzzQ7E1EQTc+00ZAiC8vdIqnJ4PSi+7h+WMh+2rRrTYvTn9ADUFS5S62lwXDDSvuEFhg+GEgxzdLewitSaDiuKSXxun8+4B2LOqVw7siah1jc=
+  app: ftcal
+  on:
+    repo: pyar6329/ftcal
