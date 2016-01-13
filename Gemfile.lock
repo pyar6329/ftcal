@@ -51,6 +51,7 @@ GEM
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
     byebug (8.2.1)
+    chronic (0.10.2)
     codeclimate-test-reporter (0.4.8)
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
@@ -338,6 +339,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   byebug
+  chronic
   codeclimate-test-reporter
   coffee-rails (~> 4.1.0)
   database_cleaner
