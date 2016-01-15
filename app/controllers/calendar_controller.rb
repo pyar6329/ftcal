@@ -23,24 +23,41 @@ class CalendarController < ApplicationController
     # client.authorization.scope = 'https://www.googleapis.com/auth/calendar.readonly'
     # token = client.authorization.fetch_access_token["access_token"]
     calendar = client.discovered_api('calendar', 'v3')
+    # puts Time.zone.now.in_time_zone('Tokyo')
+    # Time.zone.now.in_time_zone('Tokyo') + 2.weeks
 
-    params = {'calendarId' => current_user.email,
-              'orderBy' => 'startTime',
-              'timeMax' => Time.utc(2014, 3, 31, 0).iso8601,
-              'timeMin' => Time.utc(2014, 3, 1, 0).iso8601,
-              'singleEvents' => 'True'}
+    current_times = Time.zone.now
+    two_weeks_later = Time.zone.now + 2.weeks
+
+    params = {calendarId: current_user.email,
+              orderBy: 'startTime',
+              timeMin: current_times.iso8601,
+              timeMax: two_weeks_later.iso8601,
+              singleEvents: 'True'}
 
     response = client.execute(api_method: calendar.events.list,
-                            parameters: params,
-                            headers: { 'Content-Type' => 'application/json' })
+                              parameters: params#,
+                              # headers: { 'Content-Type' => 'application/json' }
+                              )
 
     events = []
     response.data.items.each do |item|
       events << item
     end
 
+    # 今回は空き時間を表示するので、タイトルと詳細はいらない
+    # events.each  do |event|
+    #   event.summary # タイトル
+    #   event.description # 詳細。nullで存在しない場合有り。
+    #   event.start.dateTime # 開始時刻
+    #   event.start.date # 全日単位の開始時刻
+    #   event.end.dateTime # 終了時刻
+    #   event.end.date # 全日単位の終了時刻
+    # end
+
     @set_event = events
-    # @set_event = current_user.to_json
+    render json: @set_event
+
     # @google_oauth2_info = hoge # concernのメソッドを実行
     # @google_oauth2_info = current_user.token
   end
