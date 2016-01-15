@@ -1,13 +1,19 @@
 require 'google/api_client'
 require 'google/api_client/client_secrets'
 
+# http://blog.ishotihadus.com/?p=122 参考
+
 class CalendarController < ApplicationController
   before_action :authenticate_user!
   # include GoogleCalendarAPI
 
   def index
-
     client = Google::APIClient.new(application_name: 'xxx', application_version: '0.0.1')
+    # client_secrets = Google::APIClient::ClientSecrets.load
+    # authorization = client_secrets.to_authorization
+    # auth_client.update!(scope: 'https://www.googleapis.com/auth/calendar',
+                        # redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
+
     client.authorization.client_id = ENV['GOOGLE_CLIENT_ID']
     client.authorization.client_secret = ENV['GOOGLE_CLIENT_SECRET']
     client.authorization.access_token = current_user.token

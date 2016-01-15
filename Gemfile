@@ -43,6 +43,7 @@ gem 'omniauth-google-oauth2'
 
 # google API
 gem 'google-api-client', '~> 0.8.6'
+# gem 'google_calendar'
 gem 'chronic'
 
 group :development, :test do
