@@ -1,2 +1,9 @@
 <h1>Welcome#index</h1>
-<%= link_to 'Signin with Google', user_omniauth_authorize_path(:google_oauth2) %>
+<div>
+  <%= link_to 'Signin with Google', user_omniauth_authorize_path(:google_oauth2) %>
+</div>
+<div>
+  <% if user_signed_in? %>
+    <%= link_to 'Calendar', controller: 'calendar', action: 'index' %>
+  <% end %>
+</div>
