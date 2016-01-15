@@ -53,3 +53,6 @@ bower.json
 
 # binstubs files ($ bundle install --binstabs .bin)
 /.bin/
+
+# Google Calendar API Test Data
+/spec/data
