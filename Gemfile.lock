@@ -51,6 +51,8 @@ GEM
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
     byebug (8.2.1)
+    callsite (0.0.11)
+    chronic (0.10.2)
     codeclimate-test-reporter (0.4.8)
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
@@ -73,15 +75,15 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    dotenv (2.0.2)
-    dotenv-rails (2.0.2)
-      dotenv (= 2.0.2)
-      railties (~> 4.0)
+    dotenv (2.1.0)
+    dotenv-rails (2.1.0)
+      dotenv (= 2.1.0)
+      railties (>= 4.0, < 5.1)
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
     erubis (2.7.0)
-    eventmachine (1.0.9)
+    eventmachine (1.0.9.1)
     execjs (2.6.0)
     extlib (0.9.16)
     factory_girl (4.5.0)
@@ -93,6 +95,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     ffi (1.9.10)
     formatador (0.2.5)
+    git-version-bump (0.15.1)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     google-api-client (0.8.6)
@@ -165,6 +168,10 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     memoist (0.14.0)
+    meta_request (0.3.4)
+      callsite (~> 0.0, >= 0.0.11)
+      rack-contrib (~> 1.1)
+      railties (>= 3.0.0, < 5.0.0)
     method_source (0.8.2)
     mime-types (2.99)
     mini_portile2 (2.0.0)
@@ -212,6 +219,9 @@ GEM
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
     rack (1.6.4)
+    rack-contrib (1.4.0)
+      git-version-bump (~> 0.15)
+      rack (~> 1.4)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.5)
@@ -338,6 +348,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   byebug
+  chronic
   codeclimate-test-reporter
   coffee-rails (~> 4.1.0)
   database_cleaner
@@ -351,6 +362,7 @@ DEPENDENCIES
   hirb-unicode
   jbuilder (~> 2.0)
   jquery-rails
+  meta_request
   omniauth
   omniauth-google-oauth2
   pg
