@@ -84,6 +84,9 @@ group :development do
 
   # secret keys
   gem 'dotenv-rails'
+
+  # chrome extension
+  gem 'meta_request'
 end
 
 # codeclimate
