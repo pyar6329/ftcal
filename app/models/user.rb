@@ -21,7 +21,8 @@ class User < ActiveRecord::Base
                   token: auth.credentials.token,
                   password: Devise.friendly_token[0, 20],
                   expires_at: auth.credentials.expires_at,
-                  expires: auth.credentials.expires
+                  expires: auth.credentials.expires,
+                  refresh_token: auth.credentials.refresh_token
                  )
     end
     # ユーザーが居ない場合、作成する
@@ -33,7 +34,8 @@ class User < ActiveRecord::Base
                          token: auth.credentials.token,
                          password: Devise.friendly_token[0, 20],
                          expires_at: auth.credentials.expires_at,
-                         expires: auth.credentials.expires
+                         expires: auth.credentials.expires,
+                         refresh_token: auth.credentials.refresh_token
                          )
     end
     user
