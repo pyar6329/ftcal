@@ -66,11 +66,54 @@ class CalendarController < ApplicationController
 
     ans = []
 
-    events.each_cons(events.length) do |eventA, eventB|
-      temphash = {}
-      temphash['eventA'] = eventA.summary
-      temphash['eventB'] = eventB.summary
-      ans << temphash
+    # events.each_cons(2) do |eventA, eventB|
+    #   temphash = {}
+    #   temphash['eventA'] = {
+    #     summary: eventA['summary'],
+    #     startTime: eventA['start']['dateTime'],
+    #     endTime: eventA['end']['dateTime']
+    #   }
+    #   temphash['eventB'] = {
+    #     summary: eventB['summary'],
+    #     startTime: eventB['start']['dateTime'],
+    #     endTime: eventB['end']['dateTime']
+    #   }
+    #
+    #   # 時間が重なっている場合
+    #   if eventB['start']['dateTime'] <= eventA['end']['dateTime'] &&
+    #     eventA['start']['dateTime'] <= eventB['end']['dateTime']
+    #     startTime = eventA['start']['dateTime'] > eventB['start']['dateTime'] ? eventB['start']['dateTime'] : eventA['start']['dateTime']
+    #     endTime = eventA['end']['dateTime'] > eventB['end']['dateTime'] ? eventB['end']['dateTime'] : eventA['end']['dateTime']
+
+    events.each do |event|
+
+      # 全日単位の予定はskip
+      next if event['start']['dateTime'].blank? || event['end']['dateTime'].blank?
+
+      temphash = {
+        startTime: event['start']['dateTime'],
+        endTime: event['end']['dateTime']
+      }.with_indifferent_access
+      # 初期値を入力
+      ans << temphash if ans.empty?
+      # a1 = Time.iso8601(ans.last['startTime'])
+      # a2 = Time.iso8601(event['end']['dateTime'])
+      # b1 = Time.iso8601(event['start']['dateTime'])
+      # b2 = Time.iso8601(ans.last[:endTime])
+
+      # 被ってたら
+      if Time.iso8601(ans.last['startTime']) <= Time.iso8601(event['end']['dateTime']) && Time.iso8601(event['start']['dateTime']) <= Time.iso8601(ans.last['endTime'])
+        # startTimeは数値が小さい方(早い時間)を入れる
+        ans.last['startTime'] = event['start']['dateTime'] > ans.last['startTime'] ? ans.last['startTime'] : event['start']['dateTime']
+        # endTimeは数値が大きい方(遅い時間)を入れる
+        ans.last['endTime'] = event['end']['dateTime'] > ans.last['endTime'] ? event['end']['dateTime'] : ans.last['endTime']
+      # 被ってなかったら要素で新規追加
+      else
+        ans << temphash
+      end
+    end
+
+      # ans << temphash
       # ans << "eventA.summary = #{eventA}, eventB.summary = #{eventB}"
       # event.summary # タイトル
       # event.description # 詳細。nullで存在しない場合有り。
@@ -78,7 +121,7 @@ class CalendarController < ApplicationController
       # event.start.date # 全日単位の開始時刻
       # event.end.dateTime # 終了時刻
       # event.end.date # 全日単位の終了時刻
-    end
+    # end
 
 
     @set_event = ans#events
