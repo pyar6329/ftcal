@@ -4,54 +4,66 @@
 $ ->
   console.log 'hello'
   $('#calendar').fullCalendar
+    ## General Display ##
     header:
-      left: 'prev,next today'
+      # left: 'prev,next today'
+      left: ''
       center: 'title'
-      right: 'month,agendaWeek,agendaDay'
-    defaultDate: '2016-01'
+      right: ''
+      # right: 'month,agendaWeek,agendaDay'
+      # right: 'agendaTwoWeek'
+      # right: 'agendaTwoWeek,agendaWeek,agendaDay'
+    # aspectRatio: 1.35
     # editable: true
     # eventLimit: true
+    height: 550
+    ## Timezone ##
     timezone: 'local'
-    events: [
-      {
-        title: 'free time'
-        start: '2016-01-16T09:00:00+09:00'
-        end: '2016-01-16T10:30:00+09:00'
-      }
-      {
-        title: 'free time'
-        start: '2016-01-19T10:00:00+09:00'
-        end: '2016-01-19T11:30:00+09:00'
-      }
-      {
-        title: 'free time'
-        start: '2016-01-20T18:30:00+09:00'
-        end: '2016-01-20T20:00:00+09:00'
-      }
-      {
-        title: 'free time'
-        start: '2016-01-22T18:30:00+09:00'
-        end: '2016-01-22T20:00:00+09:00'
-      }
-      {
-        title: 'free time'
-        start: '2016-01-23T09:00:00+09:00'
-        end: '2016-01-23T10:30:00+09:00'
-      }
-      {
-        title: 'free time'
-        start: '2016-01-26T10:00:00+09:00'
-        end: '2016-01-26T11:30:00+09:00'
-      }
-      {
-        title: 'free time'
-        start: '2016-01-27T18:30:00+09:00'
-        end: '2016-01-27T20:00:00+09:00'
-      }
-      {
-        title: 'free time'
-        start: '2016-01-29T18:30:00+09:00'
-        end: '2016-01-29T20:00:00+09:00'
-      }
-    ]
+
+    ## Views ##
+    defaultView: 'agendaTwoWeek'
+    views:
+      agendaTwoWeek:
+        type: 'agenda'
+        duration: { weeks: 2 }
+        buttonText: '2 week'
+        # titleFormat: 'MM/DD'
+        columnFormat: 'ddd M/D'
+
+    ## Agenda Options ##
+    allDaySlot: false
+    slotLabelFormat: 'H:mm'
+    scrollTime: '00:00:00'
+
+    ## Current Date ##
+    defaultDate: '2016-01-19'
+    nowIndicator: true
+
+    ## Text/Time Customization ##
+    # columnFormat: 'M/D'
+
+    ## Event Data ##
+    events: (start, end, timezone, callback) ->
+      $.ajax
+        url: '/api/v1/free_time'
+        dataType: 'json'
+        method: 'GET'
+        success: (response) ->
+          events = []
+          for data in response
+            events.push
+              title: 'free time'
+              start: data.startTime
+              end: data.endTime
+          console.log 'events'
+          console.log events
+          callback events
+  # bootstrap theme
+  $('#calendar button').addClass('btn btn-default')
+  $('.fc-view > table').wrapInner('<div id="cal-data"></div>')
+  # $('.fc-row').find('tr').wrapInner('<div id="cal-header"></div>')
+  # $('.fc-axis').wrap('<div id="cal-header-axis"></div>')
+  # $('.fc-day-header').wrapAll('<div id="cal-header-column"></div>')
+  # $('.fc-day').wrapAll('<div id="cal-body"></div>')
+
   return

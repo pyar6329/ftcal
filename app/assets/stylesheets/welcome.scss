@@ -10,6 +10,44 @@ body {
 }
 
 #calendar {
-  max-width: 900px;
-  margin: 0 auto;
+  // max-width: 900px;
+  // margin: 0 auto;
+  // .fc-view {
+    // overflow-x: scroll;
+    // border-collapse: collapse;
+    // & table {
+      // width: 900px;
+      // overflow-x: scroll;
+      // border-collapse: collapse;
+    // }
+  // }
+  #cal-data {
+    overflow-x: scroll;
+    border-collapse: collapse;
+  }
+
+  // #cal-header {
+  //   position: relative;
+  //   #cal-header-axis {
+  //     position: absolute;
+  //   }
+  //   #cal-header-column {
+  //     position: absolute;
+  //     overflow-x: scroll;
+  //   }
+  // }
+  .fc-head {
+    .fc-day-header {
+      width: 120px;
+      // position: absolute;
+      // max-width: 100%;
+      // min-width: 120px;
+    }
+  }
+
+  .fc-body {
+    .fc-day {
+      width: 120px;
+    }
+  }
 }
