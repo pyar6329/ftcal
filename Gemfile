@@ -46,6 +46,10 @@ gem 'google-api-client', '~> 0.8.6'
 # gem 'google_calendar'
 gem 'chronic'
 
+# i18n
+gem 'i18n-js', '>= 3.0.0.rc11'
+gem 'http_accept_language'
+
 group :development, :test do
   # Use sqlite3 as the database for Active Record
   gem 'sqlite3'
