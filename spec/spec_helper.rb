@@ -94,6 +94,6 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 
-  CodeClimate::TestReporter.start if ENV["CI"] == true # unless ENV['CODECLIMATE_REPO_TOKEN'].nil?
-  Coveralls.wear! if ENV["CI"] == true
+  CodeClimate::TestReporter.start unless ENV["CI"].nil? # unless ENV['CODECLIMATE_REPO_TOKEN'].nil?
+  Coveralls.wear! unless ENV["CI"].nil?
 end
