@@ -101,11 +101,10 @@ group :test do
   gem "launchy"
   gem "database_cleaner"
 
-  # codeclimate
+  # test-webservices
   gem "codeclimate-test-reporter", require: nil
-
-  # coveralls
   gem "coveralls", require: false
+  gem "codacy-coverage", require: false
 end
 
 # heroku settings

@@ -19,6 +19,7 @@
 
 require "codeclimate-test-reporter"
 require "coveralls"
+require "codacy-coverage"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -96,4 +97,5 @@ RSpec.configure do |config|
 
   CodeClimate::TestReporter.start unless ENV["CI"].nil? # unless ENV['CODECLIMATE_REPO_TOKEN'].nil?
   Coveralls.wear! unless ENV["CI"].nil?
+  Codacy::Reporter.start
 end
