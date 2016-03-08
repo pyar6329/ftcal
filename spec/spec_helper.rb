@@ -17,7 +17,8 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require 'codeclimate-test-reporter'
+require "codeclimate-test-reporter"
+require "coveralls"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -92,5 +93,7 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
-  CodeClimate::TestReporter.start unless ENV['CODECLIMATE_REPO_TOKEN'].nil?
+
+  CodeClimate::TestReporter.start if ENV["CI"] == true # unless ENV['CODECLIMATE_REPO_TOKEN'].nil?
+  Coveralls.wear! if ENV["CI"] == true
 end

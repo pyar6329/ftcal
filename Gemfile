@@ -103,6 +103,9 @@ group :test do
 
   # codeclimate
   gem "codeclimate-test-reporter", require: nil
+
+  # coveralls
+  gem "coveralls", require: false
 end
 
 # heroku settings
