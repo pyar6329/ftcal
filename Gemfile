@@ -103,8 +103,10 @@ group :test do
   gem "database_cleaner"
 
   # test-webservices
-  gem "codeclimate-test-reporter", require: nil
+  gem "simplecov", require: false
+  gem "codeclimate-test-reporter", require: false
   gem "coveralls", require: false
+  gem "codecov", require: false
   gem "codacy-coverage", require: false
 end
 
