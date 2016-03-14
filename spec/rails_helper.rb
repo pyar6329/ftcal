@@ -1,12 +1,10 @@
 if ENV["CI"] == "true"
   require "simplecov"
-  require "codeclimate-test-reporter"
   require "coveralls"
   require "codecov"
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
     SimpleCov::Formatter::HTMLFormatter,
-    CodeClimate::TestReporter::Formatter,
     Coveralls::SimpleCov::Formatter,
     SimpleCov::Formatter::Codecov
   ]

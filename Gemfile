@@ -104,7 +104,6 @@ group :test do
 
   # test-webservices
   gem "simplecov", require: false
-  gem "codeclimate-test-reporter", require: false
   gem "coveralls", require: false
   gem "codecov", require: false
 end
