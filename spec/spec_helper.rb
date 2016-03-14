@@ -17,6 +17,34 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
+if ENV["CI"] == "true"
+  require "simplecov"
+  require "codeclimate-test-reporter"
+  require "coveralls"
+  require "codecov"
+
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    CodeClimate::TestReporter::Formatter,
+    Coveralls::SimpleCov::Formatter,
+    SimpleCov::Formatter::Codecov
+  ]
+
+  SimpleCov.start "rails" do
+    add_filter "/vendor/"
+    add_filter "/public/"
+    add_filter "/tmp/"
+    add_filter "/log/"
+    add_filter "/lib/"
+    add_filter "/coverage/"
+    add_filter "/config/"
+    add_filter "/bin/"
+    add_filter "/db/"
+    add_filter "/spec/"
+    add_filter "/.bundle/"
+  end
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
@@ -90,38 +118,4 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
-
-  if ENV["CI"] == "true"
-    require "simplecov"
-    require "codeclimate-test-reporter"
-    require "coveralls"
-    require "codacy-coverage"
-    require "codecov"
-
-    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-      SimpleCov::Formatter::HTMLFormatter,
-      CodeClimate::TestReporter::Formatter,
-      Coveralls::SimpleCov::Formatter,
-      Codacy::Formatter,
-      SimpleCov::Formatter::Codecov
-    ]
-
-    SimpleCov.start "rails" do
-      add_filter "/vendor/"
-      add_filter "/public/"
-      add_filter "/tmp/"
-      add_filter "/log/"
-      add_filter "/lib/"
-      add_filter "/coverage/"
-      add_filter "/config/"
-      add_filter "/bin/"
-      add_filter "/db/"
-      add_filter "/spec/"
-      add_filter "/.bundle/"
-    end
-  end
-
-  # CodeClimate::TestReporter.start unless ENV["CI"].nil? # unless ENV['CODECLIMATE_REPO_TOKEN'].nil?
-  # Coveralls.wear! unless ENV["CI"].nil?
-  # Codacy::Reporter.start unless ENV["CI"].nil?
 end

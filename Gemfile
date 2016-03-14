@@ -107,7 +107,6 @@ group :test do
   gem "codeclimate-test-reporter", require: false
   gem "coveralls", require: false
   gem "codecov", require: false
-  gem "codacy-coverage", require: false
 end
 
 # heroku settings
