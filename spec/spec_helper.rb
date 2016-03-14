@@ -97,5 +97,5 @@ RSpec.configure do |config|
 
   CodeClimate::TestReporter.start unless ENV["CI"].nil? # unless ENV['CODECLIMATE_REPO_TOKEN'].nil?
   Coveralls.wear! unless ENV["CI"].nil?
-  Codacy::Reporter.start
+  Codacy::Reporter.start unless ENV["CI"].nil?
 end

@@ -94,7 +94,8 @@ end
 
 group :test do
   # BDD
-  gem "faker"
+  gem "fuubar"
+  gem "ffaker"
   gem "shoulda-matchers"
   gem "capybara"
   gem "poltergeist"
