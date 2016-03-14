@@ -1,3 +1,35 @@
+if ENV["CI"] == "true"
+  require "simplecov"
+  require "codeclimate-test-reporter"
+  require "coveralls"
+  require "codecov"
+
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    CodeClimate::TestReporter::Formatter,
+    Coveralls::SimpleCov::Formatter,
+    SimpleCov::Formatter::Codecov
+  ]
+
+  SimpleCov.start "rails" do
+    add_filter "/vendor/"
+    add_filter "/public/"
+    add_filter "/tmp/"
+    add_filter "/log/"
+    add_filter "/coverage/"
+    add_filter "/config/"
+    add_filter "/bin/"
+    add_filter "/db/"
+    add_filter "/spec/"
+    add_filter "/.bundle/"
+
+    add_group "Controllers", "app/controllers"
+    add_group "Models", "app/models"
+    add_group "Helpers", "app/helpers"
+    add_group "Libraries", "lib"
+  end
+end
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../../config/environment", __FILE__)

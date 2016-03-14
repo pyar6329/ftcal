@@ -17,34 +17,6 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-if ENV["CI"] == "true"
-  require "simplecov"
-  require "codeclimate-test-reporter"
-  require "coveralls"
-  require "codecov"
-
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter,
-    CodeClimate::TestReporter::Formatter,
-    Coveralls::SimpleCov::Formatter,
-    SimpleCov::Formatter::Codecov
-  ]
-
-  SimpleCov.start "rails" do
-    add_filter "/vendor/"
-    add_filter "/public/"
-    add_filter "/tmp/"
-    add_filter "/log/"
-    add_filter "/lib/"
-    add_filter "/coverage/"
-    add_filter "/config/"
-    add_filter "/bin/"
-    add_filter "/db/"
-    add_filter "/spec/"
-    add_filter "/.bundle/"
-  end
-end
-
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
