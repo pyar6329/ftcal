@@ -1,39 +1,18 @@
 require "google/api_client"
 require "google/api_client/client_secrets"
-# http://blog.ishotihadus.com/?p=122 参考
 class Calendar
-  # include ActiveModel::Model
-  # include GoogleCalendarAPI
-
   def initialize(params)
     # UTCで初期化
-    @start_time_today = params[:browser_time]#.beginning_of_day
-    @end_time_after_2weeks = (params[:browser_time] + 2.weeks)#.beginning_of_day
+    @start_time_today = params[:browser_time]
+    @end_time_after_2weeks = (params[:browser_time] + 2.weeks)
     @user_time_zone = "Tokyo"
     @current_user = params[:current_user]
   end
 
   def index
     client = Google::APIClient.new(application_name: "ftcal", application_version: "0.9.0")
-    # client = Google::APIClient.new#(auto_refresh_token: true)
-
-    # client_secrets = Google::APIClient::ClientSecrets.load
-    # authorization = client_secrets.to_authorization
-    # auth_client.update!(scope: 'https://www.googleapis.com/auth/calendar', redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
-
-    # client.authorization.client_id = ENV['GOOGLE_CLIENT_ID']
-    # client.authorization.client_secret = ENV['GOOGLE_CLIENT_SECRET']
     client.authorization.access_token = @current_user.token
-    # client.authorization.refresh_token = current_user.refresh_token
-    # client.authorization.scope = 'https://www.googleapis.com/auth/calendar.readonly'
-    # token = client.authorization.fetch_access_token["access_token"]
     calendar = client.discovered_api("calendar", "v3")
-    # puts Time.zone.now.in_time_zone('Tokyo')
-    # Time.zone.now.in_time_zone('Tokyo') + 2.weeks
-
-    # @start_time_today = Time.zone.now.beginning_of_day
-    # @end_time_after_2weeks = (Time.zone.now + 2.weeks).beginning_of_day
-
     params = {
       calendarId: @current_user.email,
       orderBy: "startTime",
@@ -44,31 +23,10 @@ class Calendar
 
     response = client.execute(
       api_method: calendar.events.list,
-      parameters: params # ,
-      # headers: { 'Content-Type' => 'application/json' }
+      parameters: params
     )
 
     events = response.data.items.map { |i| i }
-
-    # 今回は空き時間を表示するので、タイトルと詳細はいらない
-    # events.each  do |event|
-    #   event.summary # タイトル
-    #   event.description # 詳細。nullで存在しない場合有り。
-    #   event.start.dateTime # 開始時刻
-    #   event.start.date # 全日単位の開始時刻
-    #   event.end.dateTime # 終了時刻
-    #   event.end.date # 全日単位の終了時刻
-    # end
-
-    # APIアクセスしなくてもいい用 ここから
-    # require 'json'
-    # json_file_path = Rails.root.join('spec', 'data', 'true_calendar.json').to_s
-    # events = open(json_file_path, 'r') do |io|
-    #   JSON.load(io)
-    # end
-
-    # APIアクセスしなくてもいい用 ここまで
-
     ans = events.select { |event|
       event["start"]["dateTime"].present? && event["end"]["dateTime"].present? # 時間単位
     }.map { |event|
@@ -89,18 +47,7 @@ class Calendar
     # 1時間以上予定が開いているものを取得
     larger_than_1hour_lists = get_larger_than_1hour(converted_time_lists)
 
-    # @set_event = ans
-    # @set_event = add_overtime
-    # @set_event = add_overtime(ans)
-    # @set_event = added_eventlists
-    # @set_event = unique_eventlists
-    # @set_event = converted_time_lists
-    # @set_event = convert_free_time(ans) # ans # events
     @set_event = larger_than_1hour_lists
-    # render json: @set_event
-
-    # @google_oauth2_info = hoge # concernのメソッドを実行
-    # @google_oauth2_info = current_user.token
   end
 
   private
@@ -154,15 +101,11 @@ class Calendar
       # 初期値を入力
       unique_eventlists << temphash if unique_eventlists.empty?
 
-      # parsed_before_start_time = unique_eventlists.last[:startTime]
-      # parsed_before_end_time = unique_eventlists.last[:endTime]
       parsed_start_time = event[:startTime]
       parsed_end_time = event[:endTime]
 
       parsed_before_start_time = Time.parse(unique_eventlists.last[:startTime].to_s)
       parsed_before_end_time = Time.parse(unique_eventlists.last[:endTime].to_s)
-      # parsed_start_time = Time.parse(event[:startTime].to_s)
-      # parsed_end_time = Time.parse(event[:endTime].to_s)
       # 被ってたら
       if parsed_before_start_time <= parsed_end_time && parsed_start_time <= parsed_before_end_time
         # startTimeは数値が小さい方(早い時間)を入れる
