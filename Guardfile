@@ -36,6 +36,10 @@ guard :rspec, cmd: "bundle exec spring rspec" do
   watch(rspec.spec_support) { rspec.spec_dir }
   watch(rspec.spec_files)
 
+  # FactoryGirl files
+  watch(%r{^spec/factories/(.+)\.rb$}) { rspec.spec_dir }
+  watch(%r{^spec/factories.rb$}) { rspec.spec_dir }
+
   # Ruby files
   ruby = dsl.ruby
   dsl.watch_spec_files_for(ruby.lib_files)

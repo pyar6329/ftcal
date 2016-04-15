@@ -9,3 +9,6 @@ Rails.application.config.assets.version = '1.0'
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )
+files = Dir[Rails.root.join('public', 'javascripts', 'i18n', '*.js')]
+files.map! {|file| file.sub(%r(#{Rails.root}/public/javascripts/), '') }
+Rails.application.config.assets.precompile += %w( i18n.js files )
