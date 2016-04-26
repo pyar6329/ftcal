@@ -27,6 +27,7 @@ class Calendar
     )
 
     events = response.data.items.map { |i| i }
+    # return events
     ans = events.select { |event|
       event["start"]["dateTime"].present? && event["end"]["dateTime"].present? # 時間単位
     }.map { |event|
@@ -35,9 +36,10 @@ class Calendar
       }
     }
 
+    # return ans
     # overtimeが追加されたデータ
     added_eventlists = add_overtime(ans)
-
+    # return added_eventlists
     # 重複を覗いたデータ
     unique_eventlists = to_unique_event(added_eventlists)
 
@@ -47,14 +49,14 @@ class Calendar
     # 1時間以上予定が開いているものを取得
     larger_than_1hour_lists = get_larger_than_1hour(converted_time_lists)
 
-    @set_event = larger_than_1hour_lists
+    # @set_event = larger_than_1hour_lists
   end
 
   private
 
   # 20~10時、土曜00時~月曜00時を追加する
+  # 返り値は iso8601
   def add_overtime(ans)
-
     # Timezoneに直す
     ans = ans.map { |i|
       { startTime: i[:startTime].in_time_zone(@user_time_zone),
@@ -83,13 +85,25 @@ class Calendar
     }
 
     # 3つを結合し、startTime順にソート
-    overtime_lists.concat(holiday_lists).concat(ans).sort_by { |i| i[:startTime] }
-
+    sorted_overtime_lists = overtime_lists.concat(holiday_lists).concat(ans).sort_by { |i| i[:startTime] }
+    sorted_overtime_lists.map.with_index { |d, i|
+      { startTime: d[:startTime].iso8601.to_s,
+        endTime: d[:endTime].iso8601.to_s
+      }
+    }
   end
 
   # 重複した要素を除く
+  # 返り値は iso8601
   def to_unique_event(ans = nil)
     unique_eventlists = []
+
+    # Timezoneに直す
+    ans = ans.map { |i|
+      { startTime: i[:startTime].in_time_zone(@user_time_zone),
+        endTime: i[:endTime].in_time_zone(@user_time_zone),
+      }
+    }
 
     # reduce / injectを使うと楽かも
     # http://qiita.com/shibukk/items/d985d014de598d925b8b
@@ -134,6 +148,13 @@ class Calendar
 
   # 予定時間 → 空き時間に変換する
   def convert_free_time(ans)
+    # Timezoneに直す
+    ans = ans.map { |i|
+      { startTime: i[:startTime].in_time_zone(@user_time_zone).iso8601.to_s,
+        endTime: i[:endTime].in_time_zone(@user_time_zone).iso8601.to_s,
+      }
+    }
+
     converted_time_lists = []
     timezoned_today = @start_time_today.in_time_zone(@user_time_zone).beginning_of_day.iso8601.to_s
     timezoned_after_2week = @end_time_after_2weeks.in_time_zone(@user_time_zone).beginning_of_day.iso8601.to_s
@@ -145,7 +166,26 @@ class Calendar
       }
       converted_time_lists << temphash unless temphash[:startTime] == temphash[:endTime]
     end
-    converted_time_lists
+    converted_time_lists.map { |i|
+      fixed_startTime = if Time.parse(i[:startTime]) < Time.parse(timezoned_today)
+                          timezoned_today
+                        elsif Time.parse(i[:startTime]) > Time.parse(timezoned_after_2week)
+                          timezoned_after_2week
+                        else
+                          i[:startTime]
+                        end
+      fixed_endTime = if Time.parse(i[:endTime]) < Time.parse(timezoned_today)
+                        timezoned_today
+                      elsif Time.parse(i[:endTime]) > Time.parse(timezoned_after_2week)
+                        timezoned_after_2week
+                      else
+                        i[:endTime]
+                      end
+
+      { startTime: fixed_startTime,
+        endTime: fixed_endTime
+      }
+    }.reject { |i| i[:startTime] == i[:endTime] }
   end
 
   # 1時間以上予定が開いているものを取得
