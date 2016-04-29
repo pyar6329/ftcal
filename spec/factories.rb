@@ -5,4 +5,8 @@ FactoryGirl.define do
   sequence(:password) { FFaker::Internet.password }
   sequence(:uid) { rand(10**20..10**21).to_s }
   sequence(:expires_at) { SecureRandom.hex(3).hex }
+  sequence(:url) { FFaker::Internet.http_url }
+  sequence(:time) { FFaker::Time.date }
+  sequence(:title) { FFaker::CheesyLingo.title }
+  sequence(:number) { rand(10**20..10**21).to_s }
 end
