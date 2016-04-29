@@ -13,6 +13,69 @@ RSpec.describe Calendar, type: :model do
     })
   }
 
+  let(:calendar_data_for_google) {
+    [
+      {
+        "kind" => "calendar#event",
+        "etag" => "\"#{generate(:number)}\"",
+        "id" => generate(:password),
+        "status" => "confirmed",
+        "htmlLink" => generate(:url),
+        "created" => generate(:time),
+        "updated" => generate(:time),
+        "summary" => generate(:title),
+        "creator" => {
+          "email" => generate(:email),
+          "displayName" => generate(:name),
+          "self" => true
+        },
+        "organizer" => {
+          "email" => generate(:email),
+          "displayName" => generate(:name),
+          "self" => true
+        },
+        "start" => {
+          "dateTime" => "2016-04-27T11:00:00+09:00"
+        },
+        "end" => {
+          "dateTime" => "2016-04-27T14:00:00+09:00"
+        },
+        "transparency" => "transparent",
+        "iCalUID" => generate(:email),
+        "sequence" => 1,
+        "reminders" => {
+          "useDefault" => false,
+          "overrides" => [
+            {
+              "method" => "popup",
+              "minutes" => 30
+            },
+            {
+              "method" => "email",
+              "minutes" => 450
+            }
+          ]
+        }
+      }
+    ]
+  }
+  # describe "#get_calendar_for_google_api" do
+  #   it "is valid" do
+  #     return_calendar_data = calendar.send(:get_calendar_for_google_api)
+  #     expect(return_calendar_data).to include(:startTime)
+  #   end
+  # end
+
+  describe "#get_schedule" do
+    it "is valid" do
+      return_calendar_data = calendar.send(:get_schedule, calendar_data_for_google)
+      expected_calendar_data = [
+        { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00"}
+      ]
+      expect(return_calendar_data).to eq(expected_calendar_data)
+    end
+  end
+
   describe "#add_overtime" do
     # UTCのデータのとき
     it "is valid UTC data" do
@@ -105,12 +168,12 @@ RSpec.describe Calendar, type: :model do
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T12:00:00+09:00" },
         { startTime: "2016-04-27T13:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" }
       ]
-      return_add_overtime = calendar.send(:to_unique_event, calendar_data)
+      return_unique_event = calendar.send(:to_unique_event, calendar_data)
       expected_calendar_data = [
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T12:00:00+09:00" },
         { startTime: "2016-04-27T13:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" }
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_unique_event).to eq(expected_calendar_data)
     end
     # 同じデータがあるとき
     it "is same data" do
@@ -118,11 +181,11 @@ RSpec.describe Calendar, type: :model do
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" },
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" }
       ]
-      return_add_overtime = calendar.send(:to_unique_event, calendar_data)
+      return_unique_event = calendar.send(:to_unique_event, calendar_data)
       expected_calendar_data = [
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" },
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_unique_event).to eq(expected_calendar_data)
     end
     # 前に重なるとき
     it "is overlaped with the front" do
@@ -130,11 +193,11 @@ RSpec.describe Calendar, type: :model do
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" },
         { startTime: "2016-04-27T13:00:00+09:00", endTime: "2016-04-27T16:00:00+09:00" }
       ]
-      return_add_overtime = calendar.send(:to_unique_event, calendar_data)
+      return_unique_event = calendar.send(:to_unique_event, calendar_data)
       expected_calendar_data = [
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T16:00:00+09:00" },
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_unique_event).to eq(expected_calendar_data)
     end
     # 後ろに重なるとき
     it "is overlaped with the end" do
@@ -142,11 +205,11 @@ RSpec.describe Calendar, type: :model do
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" },
         { startTime: "2016-04-27T09:00:00+09:00", endTime: "2016-04-27T13:00:00+09:00" }
       ]
-      return_add_overtime = calendar.send(:to_unique_event, calendar_data)
+      return_unique_event = calendar.send(:to_unique_event, calendar_data)
       expected_calendar_data = [
         { startTime: "2016-04-27T09:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" },
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_unique_event).to eq(expected_calendar_data)
     end
     # 前を含むとき
     it "is included the front" do
@@ -154,11 +217,11 @@ RSpec.describe Calendar, type: :model do
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" },
         { startTime: "2016-04-27T09:00:00+09:00", endTime: "2016-04-27T16:00:00+09:00" }
       ]
-      return_add_overtime = calendar.send(:to_unique_event, calendar_data)
+      return_unique_event = calendar.send(:to_unique_event, calendar_data)
       expected_calendar_data = [
         { startTime: "2016-04-27T09:00:00+09:00", endTime: "2016-04-27T16:00:00+09:00" },
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_unique_event).to eq(expected_calendar_data)
     end
     # 後ろを含むとき
     it "is included the front" do
@@ -166,11 +229,11 @@ RSpec.describe Calendar, type: :model do
         { startTime: "2016-04-27T09:00:00+09:00", endTime: "2016-04-27T16:00:00+09:00" },
         { startTime: "2016-04-27T11:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" }
       ]
-      return_add_overtime = calendar.send(:to_unique_event, calendar_data)
+      return_unique_event = calendar.send(:to_unique_event, calendar_data)
       expected_calendar_data = [
         { startTime: "2016-04-27T09:00:00+09:00", endTime: "2016-04-27T16:00:00+09:00" },
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_unique_event).to eq(expected_calendar_data)
     end
   end
   describe "#convert_free_time" do
@@ -179,12 +242,12 @@ RSpec.describe Calendar, type: :model do
       calendar_data = [
         { startTime: "2016-04-27T09:00:00+09:00", endTime: "2016-04-27T16:00:00+09:00" },
       ]
-      return_add_overtime = calendar.send(:convert_free_time, calendar_data)
+      return_free_time = calendar.send(:convert_free_time, calendar_data)
       expected_calendar_data = [
         { startTime:"2016-04-26T00:00:00+09:00", endTime: "2016-04-27T09:00:00+09:00" },
         { startTime: "2016-04-27T16:00:00+09:00", endTime: "2016-05-10T00:00:00+09:00" }
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_free_time).to eq(expected_calendar_data)
     end
     # 2つの予定があるとき
     it "is two data" do
@@ -192,35 +255,35 @@ RSpec.describe Calendar, type: :model do
         { startTime: "2016-04-27T09:00:00+09:00", endTime: "2016-04-27T11:00:00+09:00" },
         { startTime: "2016-04-27T13:00:00+09:00", endTime: "2016-04-27T16:00:00+09:00" }
       ]
-      return_add_overtime = calendar.send(:convert_free_time, calendar_data)
+      return_free_time = calendar.send(:convert_free_time, calendar_data)
       expected_calendar_data = [
         { startTime:"2016-04-26T00:00:00+09:00", endTime: "2016-04-27T09:00:00+09:00" },
         { startTime:"2016-04-27T11:00:00+09:00", endTime: "2016-04-27T13:00:00+09:00" },
         { startTime: "2016-04-27T16:00:00+09:00", endTime: "2016-05-10T00:00:00+09:00" }
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_free_time).to eq(expected_calendar_data)
     end
     # 前日に予定があるとき
     it "doesn't yesterday's data" do
       calendar_data = [
         { startTime: "2016-04-25T09:00:00+09:00", endTime: "2016-04-25T11:00:00+09:00" }
       ]
-      return_add_overtime = calendar.send(:convert_free_time, calendar_data)
+      return_free_time = calendar.send(:convert_free_time, calendar_data)
       expected_calendar_data = [
         { startTime: "2016-04-26T00:00:00+09:00", endTime: "2016-05-10T00:00:00+09:00" }
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_free_time).to eq(expected_calendar_data)
     end
     # 3週間後に予定があるとき
     it "doesn't have data after three weeks" do
       calendar_data = [
         { startTime: "2016-05-17T09:00:00+09:00", endTime: "2016-05-17T11:00:00+09:00" }
       ]
-      return_add_overtime = calendar.send(:convert_free_time, calendar_data)
+      return_free_time = calendar.send(:convert_free_time, calendar_data)
       expected_calendar_data = [
         { startTime: "2016-04-26T00:00:00+09:00", endTime: "2016-05-10T00:00:00+09:00" }
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_free_time).to eq(expected_calendar_data)
     end
   end
   describe "#get_larger_than_1hour" do
@@ -229,27 +292,27 @@ RSpec.describe Calendar, type: :model do
       calendar_data = [
         { startTime: "2016-04-27T13:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" },
       ]
-      return_add_overtime = calendar.send(:get_larger_than_1hour, calendar_data)
+      return_larger_than_1hour = calendar.send(:get_larger_than_1hour, calendar_data)
       expected_calendar_data = [
         { startTime: "2016-04-27T13:00:00+09:00", endTime: "2016-04-27T14:00:00+09:00" },
       ]
-      expect(return_add_overtime).to eq(expected_calendar_data)
+      expect(return_larger_than_1hour).to eq(expected_calendar_data)
     end
     # 30分だけ空いてるとき
     it "is free time of 30 minutes" do
       calendar_data = [
         { startTime: "2016-04-27T13:00:00+09:00", endTime: "2016-04-27T13:30:00+09:00" },
       ]
-      return_add_overtime = calendar.send(:get_larger_than_1hour, calendar_data)
-      expect(return_add_overtime).to eq([])
+      return_larger_than_1hour = calendar.send(:get_larger_than_1hour, calendar_data)
+      expect(return_larger_than_1hour).to eq([])
     end
     # 59分59秒だけ空いてるとき
     it "is free time of 59 minutes" do
       calendar_data = [
         { startTime: "2016-04-27T13:00:00+09:00", endTime: "2016-04-27T13:59:59+09:00" },
       ]
-      return_add_overtime = calendar.send(:get_larger_than_1hour, calendar_data)
-      expect(return_add_overtime).to eq([])
+      return_larger_than_1hour = calendar.send(:get_larger_than_1hour, calendar_data)
+      expect(return_larger_than_1hour).to eq([])
     end
   end
 end
