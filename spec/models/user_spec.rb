@@ -73,9 +73,4 @@ RSpec.describe User, type: :model do
       is_expected.to validate_uniqueness_of(:provider).scoped_to(:uid)
     end
   end
-
-  describe "#find_for_google_oauth2" do
-    # 保存したユーザーを返すこと
-    it "returns saved user"
-  end
 end
