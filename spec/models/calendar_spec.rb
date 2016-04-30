@@ -59,12 +59,13 @@ RSpec.describe Calendar, type: :model do
       }
     ]
   }
-  # describe "#get_calendar_for_google_api" do
-  #   it "is valid" do
-  #     return_calendar_data = calendar.send(:get_calendar_for_google_api)
-  #     expect(return_calendar_data).to include(:startTime)
-  #   end
-  # end
+
+  describe "#get_calendar_for_google_api" do
+    it "is valid" do
+      return_calendar_data = calendar.send(:get_calendar_for_google_api)
+      expect(return_calendar_data).not_to be_nil
+    end
+  end
 
   describe "#get_schedule" do
     it "is valid" do
