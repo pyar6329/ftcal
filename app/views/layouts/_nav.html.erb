@@ -16,9 +16,9 @@
           <ul class="dropdown-menu" role="menu">
             <% if user_signed_in? %>
   	         <%#= current_user.email if user_signed_in? %>
-              <li><%= link_to 'サインアウト', destroy_user_session_path, method: :delete %></li>
+              <li><%= link_to 'サインアウト', destroy_user_session_path, method: :delete, id: "nav_signout" %></li>
             <% else %>
-              <li><%= link_to 'サインイン with Google', user_omniauth_authorize_path(:google_oauth2) %></li>
+              <li><%= link_to 'サインイン with Google', user_omniauth_authorize_path(:google_oauth2), id: "nav_signin" %></li>
             <% end %>
           </ul>
         </li>
