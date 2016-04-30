@@ -38,6 +38,13 @@ feature "Omniauth" do
       expect(page.has_current_path?("/calendar")).to be_truthy
     end
 
+    # ログイン成功時、ユーザー名が表示されている
+    scenario "show username", js: true do
+      login_user_as(user)
+      visit root_path
+      expect(page).to have_css("#nav_username")
+    end
+
     # ログイン成功時、サインアウトのリンクがある
     scenario "show signout link", js: true do
       login_user_as(user)
@@ -54,6 +61,7 @@ feature "Omniauth" do
       click_on "Menu"
       expect(page).not_to have_link("sign in with Google", user_omniauth_authorize_path(:google_oauth2))
     end
+
   end
 
   # ログアウトの処理
@@ -74,6 +82,13 @@ feature "Omniauth" do
       logout(:user)
       click_on "Menu"
       expect(page).to have_link("sign in with Google", user_omniauth_authorize_path(:google_oauth2))
+    end
+
+    # ログアウト成功時、ユーザー名が表示されていない
+    scenario "show username", js: true do
+      logout(:user)
+      # page.save_screenshot("./file.png")
+      expect(page).not_to have_css("#nav_username")
     end
 
     # ログアウト成功時、サインアウトのリンクが存在しない
