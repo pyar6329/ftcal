@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe CalendarController, type: :controller do
-
   describe "GET #index" do
     # as test by user
     login_user
@@ -10,6 +9,12 @@ RSpec.describe CalendarController, type: :controller do
       get :index
       expect(response).to have_http_status(:success)
     end
-  end
 
+    # ログアウトするとrootにリダイレクト
+    it "redirect to root_path" do
+      sign_out :user
+      get :index
+      expect(response).to redirect_to(root_path)
+    end
+  end
 end
