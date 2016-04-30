@@ -1,0 +1,5 @@
+---
+en:
+  nav:
+    signout: 'sign out'
+    signin: 'sign in with Google'
