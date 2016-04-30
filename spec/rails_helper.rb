@@ -36,6 +36,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require "spec_helper"
 require "rspec/rails"
 require "devise"
+require "capybara/poltergeist"
 require "support/controller_macros"
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -79,8 +80,24 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
 
+  # capybara settings
+  include Warden::Test::Helpers
+  Warden.test_mode!
+
+  Capybara.javascript_driver = :poltergeist
+  config.before(:each, type: :feature) do
+    driver = Capybara.current_session.driver
+    driver.add_headers("Accept-Language" => "en")
+  end
+  config.include WaitAjax, type: :feature
+  config.after(:each, js: :true) { wait_ajax }
+  # Capybara.register_driver :poltergeist do |app|
+  #   Capybara::Poltergeist::Driver.new(app, inspector: true)
+  # end
+
   # omniauth
   config.include OauthMacros
+  OmniAuth.config.test_mode = true
 
   # factory girl settings
   config.include FactoryGirl::Syntax::Methods
@@ -103,8 +120,14 @@ RSpec.configure do |config|
   #   DatabaseCleaner.strategy = :truncation
   # end
 
-  config.before(:each) do
+  config.before(:suite) do
     DatabaseCleaner.start
+  end
+
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
   end
 
   config.after(:each) do

@@ -3,9 +3,13 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 ready = ->
-  # browser_lang = (navigator.userLanguage || navigator.browserLanguage || navigator.language).substr(0, 2)
-  # browser_lang = 'en' if browser_lang != 'ja'
-  # console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+  browser_lang = (navigator.userLanguage || navigator.browserLanguage || navigator.language).substr(0, 2)
+  browser_lang = 'en' if browser_lang != 'ja'
+  i18n_lists =
+    "#nav_signout": I18n.t("nav.signout")
+    "#nav_signin": I18n.t("nav.signin")
+  for key, value of i18n_lists
+    $(key).text(value)
 
   calendar = $('#calendar').fullCalendar
     ## General Display ##

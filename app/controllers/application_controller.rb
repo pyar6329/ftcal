@@ -18,4 +18,14 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     calendar_index_path
   end
+
+  protected
+
+  def authenticate_user!
+    if user_signed_in?
+      super
+    else
+      redirect_to root_path, alert: t("devise.failure.unauthenticated")
+    end
+  end
 end

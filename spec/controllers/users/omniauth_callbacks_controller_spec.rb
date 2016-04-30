@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   before do
-    set_google_env_to_omniauth
+    set_valid_omniauth_callback
   end
 
   describe "GET #google_oauth2" do
