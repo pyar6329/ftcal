@@ -2,6 +2,6 @@
   <% if user_signed_in? %>
     <%= link_to 'Calendar', controller: 'calendar', action: 'index' %>
   <% else %>
-    <%= link_to image_tag("btn_google_signin_light_normal_web.png", class: "google_oauth"), user_omniauth_authorize_path(:google_oauth2) %>
+    <%= link_to image_tag("btn_google_signin_light_normal_web.png", class: "google_oauth", alt: "Sign_in_google"), user_omniauth_authorize_path(:google_oauth2) %>
   <% end %>
 </div>
