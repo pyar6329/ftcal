@@ -73,4 +73,18 @@ RSpec.describe User, type: :model do
       is_expected.to validate_uniqueness_of(:provider).scoped_to(:uid)
     end
   end
+
+  describe "#find_for_google_oauth2" do
+    let(:get_user) { User.find_for_google_oauth2(get_omniauth_hash) }
+
+    # DBにユーザー情報が保存されている
+    it "is existed on User" do
+      expect { get_user }.to change(User, :count).by(1)
+    end
+
+    # 返り値がnilではない
+    it "is not nil" do
+      expect(get_user).not_to be_nil
+    end
+  end
 end
