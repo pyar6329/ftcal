@@ -2,6 +2,7 @@ if ENV["CI"] == "true"
   require "simplecov"
   require "coveralls"
   require "codecov"
+  require "codacy-coverage"
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
     SimpleCov::Formatter::HTMLFormatter,
@@ -26,6 +27,7 @@ if ENV["CI"] == "true"
     add_group "Helpers", "app/helpers"
     add_group "Libraries", "lib"
   end
+  Codacy::Reporter.start
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
